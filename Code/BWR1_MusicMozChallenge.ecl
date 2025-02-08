@@ -28,7 +28,8 @@ COUNT(MozMusic);
 //Sort by "name",  and display (OUTPUT) the first 50(Hint: use CHOOSEN):
 
 //You should see a lot of songs by NSync 
-
+SortedName := SORT(MozMusic, name);
+OUTPUT(CHOOSEN(SortedName, 50), NAMED('SortedName'));
 
 
 //*********************************************************************************
@@ -36,12 +37,12 @@ COUNT(MozMusic);
 //Challenge: 
 //Count total songs in the "Rock" genre and display number:
 
-MOZMUSIC(genre='Country');
+COUNT(MOZMUSIC(genre='Rock'));
+
 //Result should have 12821 Rock songs
 
 //Display your Rock songs (OUTPUT):
-
-
+OUTPUT(MOZMUSIC(genre='Rock'), NAMED('Rock_Music'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -50,23 +51,35 @@ MOZMUSIC(genre='Country');
 
 //Filter ds for "Depeche_Mode" AND releasedate BETWEEN 1980 and 1989
 
+
+  //filtered_dm := MOZMUSIC(INTEGER(releasedate) >= 1980 AND INTEGER(releasedate) <= 1989);
 // Count and display total
+filtered_depeche := MozMusic(name ='Depeche_Mode' AND releasedate  BETWEEN '1980' AND '1989');
+depeche_count := COUNT(filtered_depeche);
+OUTPUT(depeche_count, NAMED('Depeche_Count'));
+
 //Result should have 127 songs 
 
 
 //Bonus points: filter out duplicate tracks (Hint: look at DEDUP):
-
+filter_dup := DEDUP(filtered_depeche, tracktitle);
+dedup_count := COUNT(filter_dup);
+OUTPUT(dedup_count, NAMED('Depeche_Dedup_Count'));
+OUTPUT(filter_dup, NAMED('Depeche_Dedup'));
 
 //*********************************************************************************
 //*********************************************************************************
 //Challenge: 
 //Who sang the song "My Way"?
-//Filter for "My Way" tracktitle
 
+//Filter for "My Way" tracktitle
+filter_myway := MozMusic(tracktitle= 'My Way');
+count_myway := COUNT(filter_myway);
 // Result should have 136 records 
 
 //Display count and result 
-
+OUTPUT(filter_myway, NAMED('MyWay_List'));
+OUTPUT(count_myway, NAMED('MyWay_Count'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -74,11 +87,13 @@ MOZMUSIC(genre='Country');
 //What song(s) in the Music Moz Dataset has the longest track title in CD format?
 
 //Get the longest description (tracktitle) field length in CD "formats"
-
-
+filter_cd := MozMusic(formats='CD');
+OUTPUT(filter_cd, NAMED('CD_Tracks'));
 //Filter dataset for tracktitle with the longest value
-
-
+longest_desc_length := MAX(filter_cd, LENGTH(tracktitle));
+OUTPUT(longest_desc_length, NAMED('Longest_Track_Title_Length'));
+longest_desc_tracks := filter_cd(LENGTH(tracktitle) = longest_desc_length);
+OUTPUT(longest_desc_tracks, NAMED('Longest_Track_Title')); 
 //Display the result
 
 //Longest track title is by the "The Brand New Heavies"               

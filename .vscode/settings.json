@@ -1,5 +1,6 @@
 {
     "ecl.forceProxySupport": true,
     "ecl.launchConfiguration": "CloudHPCC",
-    "ecl.targetCluster": {}
+    "ecl.targetCluster": {},
+    "ecl.eclccPath": "/opt/HPCCSystems/9.10.2/clienttools/bin/eclcc"
 }

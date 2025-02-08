@@ -1,4 +1,5 @@
-﻿IMPORT $;
+﻿#OPTION('obfuscateOutput', TRUE);
+IMPORT $;
 SpotMusic := $.File_Music.SpotDS;
 
 //display the first 150 records

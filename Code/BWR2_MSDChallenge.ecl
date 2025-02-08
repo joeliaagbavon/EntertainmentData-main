@@ -1,8 +1,8 @@
-﻿IMPORT $;
+﻿#OPTION('obfuscateOutput', TRUE);
+IMPORT $;
 MSDMusic := $.File_Music.MSDDS;
 
 //display the first 150 records
-
 OUTPUT(CHOOSEN(MSDMusic, 150), NAMED('Raw_MusicDS'));
 
 //*********************************************************************************
@@ -16,21 +16,26 @@ OUTPUT(CHOOSEN(MSDMusic, 150), NAMED('Raw_MusicDS'));
 //Reverse Sort by "year" and count your total music dataset and display the first 50
 
 //Result: Total count is 1000000
-
+msd_count := COUNT(MSDMusic);
+OUTPUT(msd_count, NAMED('Total_MSDMusic_Count'));
 //Reverse sort by "year"
-
+reverse_msd := SORT(MSDMusic, -year);
+first_50 := CHOOSEN(reverse_msd, 50);
 
 //display the first 50
 
 
 //Count and display result
-
+OUTPUT(first_50, NAMED('Reverse_Sorted_Music'));
 
 //*********************************************************************************
 //*********************************************************************************
 //Challenge: 
 //Display first 50 songs by of year 2010 and then count the total 
-
+first_50_2010 := CHOOSEN(MSDMusic(year = 2010), 50);
+first_50_2010_count := COUNT(first_50_2010);
+OUTPUT(first_50_2010_count, NAMED('First_50_2010_Count'));
+OUTPUT(first_50_2010, NAMED('First_50_2010'));
 //Result should have 9397 songs for 2010
 
 //Filter for 2010 and display the first 50
