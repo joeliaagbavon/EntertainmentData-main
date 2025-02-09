@@ -153,29 +153,29 @@ OUTPUT(guest_musicians_count, NAMED('Guest_Musicians_Count'));
 //Result should only have 4 fields. 
 
 //Hint: First create your new RECORD layout  
-/*NewRecordLayout := RECORD 
- STRING track := '';
-    STRING release := '';
-    STRING artist := '';
-    STRING year := '';
+NewRecordLayout := RECORD 
+ STRING track;
+    STRING release;
+    STRING artist;
+    STRING year;
 END;
 
 //Next: Standalone Transform - use TRANSFORM for new fields.
-transform_data := TRANSFORM
+transform_data := PROJECT(MozMusic, 
+TRANSFORM(NewRecordLayout,
   SELF.track := LEFT.tracktitle,
   SELF.release := LEFT.title,
     SELF.artist := LEFT.name,
   SELF.year := LEFT.releasedate,
-  SELF := []
-END;
+));
+
 
 
 //Use PROJECT, to loop through your music dataset
-loop_data := PROJECT(MozMusic, transform(LEFT));
-*/
+
 
 // Display result  
-
+OUTPUT(transform_data, NAMED('Track_Release_Artist_Year'));
 
 //*********************************************************************************
 //*********************************************************************************
