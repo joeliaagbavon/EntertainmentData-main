@@ -31,18 +31,16 @@ OUTPUT(first_50, NAMED('Reverse_Sorted_Music'));
 //*********************************************************************************
 //*********************************************************************************
 //Challenge: 
-//Display first 50 songs by of year 2010 and then count the total 
-first_50_2010 := CHOOSEN(MSDMusic(year = 2010), 50);
-first_50_2010_count := COUNT(first_50_2010);
-OUTPUT(first_50_2010_count, NAMED('First_50_2010_Count'));
-OUTPUT(first_50_2010, NAMED('First_50_2010'));
+//Display first 50 songs by of year 2010 and then count the total
+
+
+first_50_count := COUNT(MSDMusic(year = 2010));
 //Result should have 9397 songs for 2010
 
 //Filter for 2010 and display the first 50
-
-
+first_50_2010 := CHOOSEN(MSDMusic(year = 2010), 50);
 //Count total songs released in 2010:
-
+OUTPUT(first_50_2010, NAMED('First_50_2010'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -50,11 +48,13 @@ OUTPUT(first_50_2010, NAMED('First_50_2010'));
 //Count how many songs was produced by "Prince" in 1982
 
 //Result should have 4 counts
+prince_songs_count := COUNT(MSDMusic(artist_name = 'Prince' AND year = 1982));
 
 //Filter ds for "Prince" AND 1982
-
+prince_filter := MSDMusic(artist_name = 'Prince' AND year = 1982);
 //Count and print total 
-
+prince_count := COUNT(prince_filter);
+OUTPUT(prince_songs_count, NAMED('Prince_Songs_Count'));
 //*********************************************************************************
 //*********************************************************************************
 //Challenge: 
@@ -63,10 +63,10 @@ OUTPUT(first_50_2010, NAMED('First_50_2010'));
 // Result should have 3 records
 
 //Filter for "Into Temptation"
-
+into_temptation_filter := MSDMusic(title = 'Into Temptation');
 
 //Display result 
-
+// COME BACK TO THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //*********************************************************************************
 //*********************************************************************************
@@ -110,18 +110,21 @@ OUTPUT(first_50_2010, NAMED('First_50_2010'));
 //"Song Hotness" greater or equal to .75 ( >= .75 ) , SORT it by title.
 //Count the total result
 
+coldplay_filter := COUNT(MSDMusic(artist_name = 'Coldplay' AND song_hotness >= .75));
+
 //Result has 47 records
 
 //Get songs by defined conditions
-
+coldplay_tracks := MSDMusic(artist_name = 'Coldplay' AND song_hotness >= .75);
 
 //Sort the result
-
+sort_coldplay := SORT(coldplay_tracks, title);
 
 //Output the result
-
+OUTPUT(sort_coldplay, NAMED('Coldplay_Tracks'));
 
 //Count and output result 
+OUTPUT(coldplay_filter, NAMED('Coldplay_Tracks_Count'));
 
 
 //*********************************************************************************
@@ -170,7 +173,13 @@ OUTPUT(first_50_2010, NAMED('First_50_2010'));
 
 //Result for hotness = 0.4706972681953097, StartDev = 0.8896342348554744
 
+hotness_filter := MSDMusic(song_hotness <> 0 AND artist_hotness <> 0);
+beat_filter := MSDMusic(barsstartdev <> 0 AND beatsstartdev <> 0);
+correlation_hotness := CORRELATION(hotness_filter, song_hotness, artist_hotness);
+correlation_beat := CORRELATION(beat_filter, barsstartdev, beatsstartdev);
 
+OUTPUT(correlation_hotness, NAMED('Correlation_Hotness'));
+OUTPUT(correlation_beat, NAMED('Correlation_Beat'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -213,10 +222,17 @@ OUTPUT(first_50_2010, NAMED('First_50_2010'));
 //Result has 2 col, Year and TotalSongs, count is 89
 
 //Hint: All you need is a cross-tab TABLE 
-
+YearSongCount_Layout := RECORD
+    MSDMusic.year;                  
+    TotalSongs := COUNT(GROUP);      
+END;
 //Display the  result      
+year_song_table := TABLE(MSDMusic, YearSongCount_Layout, year);
 
 //Count and display total number of years counted
+year_song_count := COUNT(year_song_table);
+OUTPUT(year_song_table, NAMED('Year_Song_Table'));
+OUTPUT(year_song_count, NAMED('Year_Song_Count'));
 
 
 //*********************************************************************************
@@ -226,10 +242,18 @@ OUTPUT(first_50_2010, NAMED('First_50_2010'));
 
 // Hint: All you need is a TABLE, and see the TOPN function for your OUTPUT 
 
-// Output the top ten results showing two columns, Artist_Name, and HotRate.
-
 // Filter for year
+songs_06_07 := MSDMusic(year >= 2006 AND year <= 2007);
+// Output the top ten results showing two columns, Artist_Name, and HotRate.
+Artist_HotRate_Layout := RECORD
+    songs_06_07.artist_name;
+    HotRate := AVE(GROUP, songs_06_07.song_hotness);
+END;
 
 // Create a Cross-Tab TABLE:
+artist_hotness_table := TABLE(songs_06_07, Artist_HotRate_Layout, artist_name);
+
 
 // Display the top ten results with top "HotRate"      
+top_10 := TOPN(artist_hotness_table, 10, -HotRate);
+OUTPUT(top_10, NAMED('Top_Artist_Hotness'));

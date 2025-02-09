@@ -17,18 +17,19 @@ OUTPUT(CHOOSEN(SpotMusic, 150), NAMED('Raw_MusicDS'));
 
 //Challenge: 
 //Sort songs by genre and count the number of songs in your total music dataset 
-
  
 
 //Sort by "genre" (See SORT function)
-
+genre_sort := SORT(SpotMusic, genre);
 
 //Display them: (See OUTPUT)
+OUTPUT(genre_sort, NAMED('Sorted_Genre'));
 
 
 //Count and display result (See COUNT)
 //Result: Total count is 1159764:
-
+total_count := COUNT(genre_sort);
+OUTPUT(total_count, NAMED('Total_Songs_Count'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -37,9 +38,12 @@ OUTPUT(CHOOSEN(SpotMusic, 150), NAMED('Raw_MusicDS'));
 //Display songs by "garage" genre and then count the total 
 //Filter for garage genre and OUTPUT them:
 
-
 //Count total garage songs
+songs_by_garage := SpotMusic(genre = 'garage');
+songs_by_garage_count := COUNT(songs_by_garage);
 //Result should have 17123 records:
+OUTPUT(songs_by_garage, NAMED('Garage_Songs'));
+OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 
 
 //*********************************************************************************
@@ -212,7 +216,7 @@ OUTPUT(CHOOSEN(SpotMusic, 150), NAMED('Raw_MusicDS'));
 //Display result here:
 
 
-                       
+
                                               
 //*********************************************************************************
 //*********************************************************************************
@@ -221,14 +225,23 @@ OUTPUT(CHOOSEN(SpotMusic, 150), NAMED('Raw_MusicDS'));
 //Display number of songs for each "Genre", output and count your total 
 
 //Result has 2 col, Genre and TotalSongs, count is 82
-
+GenreSongCount_Layout := RECORD
+    SpotMusic.genre;                  
+    TotalSongs := COUNT(GROUP);      
+END;
 //Hint: All you need is a TABLE - this is a CrossTab report 
-
-//Printing the first 50 records of the result      
+genre_song_count := TABLE(SpotMusic, GenreSongCount_Layout, genre);
 
 //Count and display total - there should be 82 unique genres
+unique_genres := COUNT(genre_song_count);
+OUTPUT(unique_genres, NAMED('Unique_Genres_Count'));
+//Printing the first 50 records of the result      
+OUTPUT(CHOOSEN(genre_song_count, 50), NAMED('Genre_Song_Count'));
 
 //Bonus: What is the top genre?
+sorted_genres := SORT(genre_song_count, -TotalSongs);
+top_genre := CHOOSEN(sorted_genres, 1);
+OUTPUT(top_genre, NAMED('Top_Genre'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -236,12 +249,19 @@ OUTPUT(CHOOSEN(SpotMusic, 150), NAMED('Raw_MusicDS'));
 
 //Hint: All you need is a TABLE 
 
-//Result has 37600 records with two col, Artist, and DancableRate.
-
 //Filter for year 2023
+year_2023 := SpotMusic(year = 2023);
+
+DanceArtist_Layout := RECORD
+    year_2023.artist_name;                  
+    DancableRate := AVE(year_2023.danceability);      
+END;
+
+//Result has 37600 records with two col, Artist, and DancableRate.
+danceability_table := TABLE(year_2023, DanceArtist_Layout, artist_name);
 
 //OUTPUT the result    
-
+OUTPUT(danceability_table, NAMED('Danceability'));
 
 
 

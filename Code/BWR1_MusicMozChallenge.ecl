@@ -110,19 +110,19 @@ OUTPUT(longest_desc_tracks, NAMED('Longest_Track_Title'));
 //Display all songs produced by "U2" , SORT it by title.
 
 //Filter track by artist
-
+artist_filter := MozMusic(name = 'U2');
 
 //Sort the result by tracktitle
-
+sort_tracktitle := SORT(artist_filter, tracktitle);
 
 //Output the result
-
+OUTPUT(sort_tracktitle, NAMED('U2_Tracks'));
 
 //Count result 
-
+u2_tracks_count := COUNT(sort_tracktitle);
 
 //Result has 190 records
-
+OUTPUT(u2_tracks_count, NAMED('U2_Tracks_Count'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -132,13 +132,13 @@ OUTPUT(longest_desc_tracks, NAMED('Longest_Track_Title'));
 //Hint: Think of the filter as "not blank" 
 
 //Filter for "guestmusicians"
-
+guest_musicians := MozMusic(guestmusicians <> '');
 
 //Display Count result
-                             
+guest_musicians_count := COUNT(guest_musicians);                    
 
 //Result should be 44588 songs  
-
+OUTPUT(guest_musicians_count, NAMED('Guest_Musicians_Count'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -154,15 +154,15 @@ OUTPUT(longest_desc_tracks, NAMED('Longest_Track_Title'));
 //Hint: First create your new RECORD layout  
 
 
-
 //Next: Standalone Transform - use TRANSFORM for new fields.
+
 
 
 //Use PROJECT, to loop through your music dataset
 
 
 // Display result  
-      
+
 
 //*********************************************************************************
 //*********************************************************************************
@@ -178,6 +178,20 @@ OUTPUT(longest_desc_tracks, NAMED('Longest_Track_Title'));
 //Hint: All you need is a 2 field TABLE using cross-tab
 
 //Display the TABLE result      
+GenreSongCount_Layout := RECORD
+    MozMusic.genre;                  
+    TotalSongs := COUNT(GROUP);      
+END;
+
+// Create a table that groups by Genre and counts the number of songs in each genre
+genre_song_count := TABLE(MozMusic, GenreSongCount_Layout, genre);
+
+// Output the result
+OUTPUT(genre_song_count, NAMED('Genre_Song_Count'));
+
+// Count the total number of records in the table
+total_records := COUNT(genre_song_count);
+OUTPUT(total_records, NAMED('Total_Records'));
 
 
 //Count and display total records in TABLE
@@ -190,12 +204,19 @@ OUTPUT(longest_desc_tracks, NAMED('Longest_Track_Title'));
 //What Artist had the most releases between 2001-2010 (releasedate)?
 
 //Hint: All you need is a cross-tab TABLE 
+Artist_Popularity_Layout := RECORD
+    MozMusic.name;                  
+    TotalSongs := COUNT(GROUP);      
+END;
+release_filter := MozMusic(releasedate BETWEEN '2001' AND '2010');
+
+artist_song_count := TABLE(MozMusic, Artist_Popularity_Layout, name);
 
 //Output Name, and Title Count(TitleCnt)
-
+OUTPUT(artist_song_count, NAMED('Artist_Song_Count'));
 //Filter for year (releasedate)
 
 //Cross-tab TABLE
 
-
-//Display the result      
+//Display the result   
+OUTPUT(release_filter, NAMED('Artist_Releases'));
