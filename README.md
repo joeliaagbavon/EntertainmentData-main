@@ -5,7 +5,7 @@ In this coding challenge, I utilized HPCC System's coding language ECL to solve 
 
 ## Challenges and Solutions 
 Setting up the HPCC enviroment and learning the syntac of ECL were some difficulties that I faced. I was able to overcome these problems by: 
-    - Engaging with the challenge sponsors: With the teachings and guidance from the sponsors, my experience with learning a new langauge went by more smoothly. 
+   <p> - Engaging with the challenge sponsors: With the teachings and guidance from the sponsors, my experience with learning a new langauge went by more smoothly. </p>
 
 ## Datasets Used 
 
