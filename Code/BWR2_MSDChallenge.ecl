@@ -92,23 +92,41 @@ OUTPUT(first_100, NAMED('First_100_Artist_Song'));
 //Result is 
 
 //Filter dataset for the maxHot value
-maxHot_filter := MSDMusic(song_hotness > 0);
+maxHot_filter := MSDMusic(song_hotness > 0 and year > 0);
 //Get the datasets maximum hotness value
 HotnessYearLayout := RECORD
     MSDMusic.year;
     maxHot := MAX(GROUP, MSDMusic.song_hotness);
+    MSDMusic.title;
 END;
 
 hotness_year_table := TABLE(maxHot_filter, HotnessYearLayout, year);
-hotness_year_table_sorted := SORT(hotness_year_table, year);
+hotness_year_table_sorted := SORT(hotness_year_table, -year);
+hottest_song := CHOOSEN(hotness_year_table_sorted, 1);
 OUTPUT(hotness_year_table_sorted, NAMED('MaxHot_Year'));
 
-
-
-
 //Display the result
+OUTPUT(hottest_song, NAMED('Hottest_Song_Year'));
 
 
+/*valid_year_songs := MSDMusic(year > 0);
+
+HotnessLayout := RECORD
+    valid_year_songs.year;
+    MaxHotness := MAX(GROUP, valid_year_songs.song_hotness);
+END;
+
+
+year_hotness := TABLE(valid_year_songs, HotnessLayout, year);
+
+
+hottest_songs := JOIN(valid_year_songs, year_hotness, LEFT.year = RIGHT.year AND LEFT.song_hotness = RIGHT.MaxHotness);
+
+
+sorted_hottest_songs := SORT(hottest_songs, year);
+hottest_song := CHOOSEN(sorted_hottest_songs, 1);
+OUTPUT(hottest_song, NAMED('Hottest_Song_Year'));
+*/
 //*********************************************************************************
 //*********************************************************************************
 

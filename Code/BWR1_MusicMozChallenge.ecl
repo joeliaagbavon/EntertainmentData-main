@@ -17,7 +17,8 @@ OUTPUT(CHOOSEN(MozMusic, 150), NAMED('Moz_MusicDS'));
 //Challenge: 
 //Count all the records in the dataset:
 
-COUNT(MozMusic);
+mozmusic_count := COUNT(MozMusic);
+OUTPUT(mozmusic_count, NAMED('MozMusic_Count'));
 
 //Result: Total count is 136510
 
@@ -37,10 +38,10 @@ OUTPUT(CHOOSEN(SortedName, 50), NAMED('SortedName'));
 //Challenge: 
 //Count total songs in the "Rock" genre and display number:
 
-COUNT(MOZMUSIC(genre='Rock'));
+rock_count := COUNT(MOZMUSIC(genre='Rock'));
 
 //Result should have 12821 Rock songs
-
+OUTPUT(rock_count, NAMED('Rock_Count'));
 //Display your Rock songs (OUTPUT):
 OUTPUT(MOZMUSIC(genre='Rock'), NAMED('Rock_Music'));
 
@@ -217,19 +218,25 @@ OUTPUT(total_records, NAMED('Total_Records'));
 //What Artist had the most releases between 2001-2010 (releasedate)?
 
 //Hint: All you need is a cross-tab TABLE 
-Artist_Popularity_Layout := RECORD
-    MozMusic.name;                  
-    TotalSongs := COUNT(GROUP);      
-END;
-release_filter := MozMusic(releasedate BETWEEN '2001' AND '2010');
+//Filter for year (releasedate)
+release_filter := DEDUP(MozMusic(releasedate BETWEEN '2001' AND '2010'), name, title);
 
-artist_song_count := TABLE(MozMusic, Artist_Popularity_Layout, name);
+artist_table := TABLE(release_filter,
+                     {name,
+                      UNSIGNED4 TitleCnt := COUNT(GROUP)},
+                     name,
+                     MERGE);
+
+artist_table_sorted := SORT(artist_table, -titlecnt);
 
 //Output Name, and Title Count(TitleCnt)
-OUTPUT(artist_song_count, NAMED('Artist_Song_Count'));
-//Filter for year (releasedate)
+OUTPUT(artist_table_sorted, NAMED('Artist_Releases'));
+
 
 //Cross-tab TABLE
 
-//Display the result   
-OUTPUT(release_filter, NAMED('Artist_Releases'));
+//Display the result
+artist_most_releases := CHOOSEN(SORT(artist_table, -titlecnt), 1);   
+OUTPUT(artist_most_releases, NAMED('Artist_Most_Releases'));
+
+
