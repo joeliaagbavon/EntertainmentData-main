@@ -1,5 +1,8 @@
 # HPCC Systems ECL Code Challenge - Music is Life!
 
+## Members 
+Joelia Agbavon
+
 ## Project Overview 
 In this coding challenge, I utilized HPCC System's coding language ECL to solve a series of problems to analze three public music datasets: Music Mozilla Dataset, Million Song Dataset, Spotify Million Dataset.
 
