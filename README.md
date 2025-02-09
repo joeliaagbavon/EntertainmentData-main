@@ -4,7 +4,7 @@
 Joelia Agbavon
 
 ## Project Overview 
-In this coding challenge, I utilized HPCC System's coding language ECL to solve a series of problems to analze three public music datasets: Music Mozilla Dataset, Million Song Dataset, Spotify Million Dataset.
+In this coding challenge, I utilized HPCC System's coding language ECL to solve a series of problems to analyze three public music datasets: Music Mozilla Dataset, Million Song Dataset, Spotify Million Dataset.
 
 ## Challenges and Solutions 
 Setting up the HPCC enviroment and learning the syntac of ECL were some difficulties that I faced. I was able to overcome these problems by: 
