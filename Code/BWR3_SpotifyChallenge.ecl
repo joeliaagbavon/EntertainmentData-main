@@ -1,5 +1,6 @@
 ﻿#OPTION('obfuscateOutput', TRUE);
 IMPORT $;
+IMPORT std;
 SpotMusic := $.File_Music.SpotDS;
 
 //display the first 150 records
@@ -53,10 +54,11 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 //Count how many songs was produced by "Prince" in 2001
 
 //Filter ds for 'Prince' AND 2001
-
+filter_prince := SpotMusic(artist_name = 'Prince' AND year = 2001);
 
 //Count and output total - should be 35 
-
+prince_count := COUNT(filter_prince);
+OUTPUT(prince_count, NAMED('Prince_Songs_Count'));
 
 
 //*********************************************************************************
@@ -68,9 +70,9 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 // Result should have 1 record and the artist is "New York Dolls"
 
 //Filter for "Temptation to Exist" (name is case sensitive)
-
+filter_temptation := SpotMusic(STD.Str.ToUpperCase(track_name) = STD.Str.ToUpperCase('Temptation to Exist'));
 //Display result 
-
+OUTPUT(filter_temptation, NAMED('Temptation_Song'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -87,10 +89,10 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 
 
 //Sort dataset by Artist_name, and track_name:
-
+artist_track_sort := SORT(SpotMusic, artist_name, track_name);
 
 //Output here:
-
+OUTPUT(artist_track_sort, NAMED('Artist_Track_Sorted'));
 
 
 //*********************************************************************************
@@ -103,9 +105,10 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 
 
 //Filter dataset for the mostPop value
-
+mostPop := MAX(SpotMusic, popularity);
 
 //Display the result - should be "Flowers" by Miley Cyrus
+OUTPUT(SpotMusic(popularity = mostPop), NAMED('Most_Popular_Song'));
 
 
 
@@ -125,16 +128,17 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 //Result has 9 records
 
 //Get songs by defined conditions
-
+coldplay_filter := SpotMusic(artist_name = 'Coldplay' AND popularity >= 75);
 
 //Sort the result
-
+coldplay_sort := SORT(coldplay_filter, track_name);
 
 //Output the result
-
+OUTPUT(coldplay_sort, NAMED('Coldplay_Popularity'));
 
 //Count and output result 
-
+coldplay_count := COUNT(coldplay_sort);
+OUTPUT(coldplay_count, NAMED('Coldplay_Popularity_Count'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -144,12 +148,12 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 //Hint: (Duration_ms BETWEEN 200000 AND 250000)
 
 //Filter for required conditions
-                          
+duration_filter := SpotMusic(duration_ms >= 200000 AND duration_ms <= 250000 AND speechiness > .75);                       
 
 //Count result (should be 2153):
-
+duration_count := COUNT(duration_filter);
 //Display result:
-
+OUTPUT(duration_count, NAMED('Duration_Count'));
 //*********************************************************************************
 //*********************************************************************************
 
@@ -163,12 +167,21 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 //Use PROJECT, to loop through your music dataset
 
 //Define RECORD here:
-
+ArtistTitleYearLayout := RECORD
+    STRING artist_name;
+    STRING track_name;
+    UNSIGNED4 year;
+END;
 //Standalone TRANSFORM Here 
-
+new_dataset := PROJECT(SpotMusic, TRANSFORM(ArtistTitleYearLayout,
+    SELF.artist_name := LEFT.artist_name,
+    SELF.track_name := LEFT.track_name,
+    SELF.year := LEFT.year
+));
 //PROJECT here:
 
 //OUTPUT your PROJECT here:
+OUTPUT(new_dataset, NAMED('Artist_Title_Year'));
       
 
 //*********************************************************************************
@@ -179,6 +192,11 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 //2- What’s the correlation between "Loudness" AND "Energy"
 
 //Result for liveness = -0.05696845812100079, Energy = -0.03441566150625201
+
+popularity_liveness := CORRELATION(SpotMusic, popularity, liveness);
+//loudness_energy := CORRELATION(SpotMusic, loudness, energy);
+OUTPUT(popularity_liveness, NAMED('Popularity_Liveness_Correlation'));
+//OUTPUT(loudness_energy, NAMED('Loudness_Energy_Correlation'));
 
 
 
@@ -205,16 +223,27 @@ OUTPUT(songs_by_garage_count, NAMED('Garage_Songs_Count'));
 //      Use PROJECT, to loop through your music dataset
 
 //Define the RECORD layout
-
+NewLayout := RECORD
+    STRING song;
+    STRING artist;
+    BOOLEAN isPopular;
+   // DECIMAL3_2 funkiness;
+ 
+END;
 
 //Build TRANSFORM
-
+four_col_dataset := PROJECT(SpotMusic, TRANSFORM(NewLayout,
+    SELF.song := LEFT.track_name,
+    SELF.artist := LEFT.artist_name,
+    SELF.isPopular := LEFT.popularity > 80,
+  //  SELF.funkiness := LEFT.energy + LEFT.danceability
+));
 
 //Project here:
 
 
 //Display result here:
-
+OUTPUT(four_col_dataset, NAMED('Four_Columns_Dataset'));
 
 
                                               

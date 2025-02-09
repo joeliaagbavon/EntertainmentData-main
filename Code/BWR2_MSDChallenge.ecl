@@ -1,5 +1,6 @@
 ﻿#OPTION('obfuscateOutput', TRUE);
 IMPORT $;
+IMPORT std;
 MSDMusic := $.File_Music.MSDDS;
 
 //display the first 150 records
@@ -63,10 +64,10 @@ OUTPUT(prince_songs_count, NAMED('Prince_Songs_Count'));
 // Result should have 3 records
 
 //Filter for "Into Temptation"
-into_temptation_filter := MSDMusic(title = 'Into Temptation');
+into_temptation_filter := MSDMusic(STD.Str.ToUpperCase(title) = STD.Str.ToUpperCase('Into Temptation'));
 
 //Display result 
-// COME BACK TO THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+OUTPUT(into_temptation_filter, NAMED('Into_Temptation'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -76,10 +77,11 @@ into_temptation_filter := MSDMusic(title = 'Into Temptation');
 //Result: The first 10 records have no artist name, followed by "- PlusMinus"                                     
 
 //Sort dataset by Artist, and Title
-
+artist_song_sort := SORT(MSDMusic, artist_name, title);
 
 //Output the first 100
-
+first_100 := CHOOSEN(artist_song_sort, 100);
+OUTPUT(first_100, NAMED('First_100_Artist_Song'));
 
 //*********************************************************************************
 //*********************************************************************************
@@ -89,10 +91,19 @@ into_temptation_filter := MSDMusic(title = 'Into Temptation');
 
 //Result is 
 
-//Get the datasets maximum hotness value
-
-
 //Filter dataset for the maxHot value
+maxHot_filter := MSDMusic(song_hotness > 0);
+//Get the datasets maximum hotness value
+HotnessYearLayout := RECORD
+    MSDMusic.year;
+    maxHot := MAX(GROUP, MSDMusic.song_hotness);
+END;
+
+hotness_year_table := TABLE(maxHot_filter, HotnessYearLayout, year);
+hotness_year_table_sorted := SORT(hotness_year_table, year);
+OUTPUT(hotness_year_table_sorted, NAMED('MaxHot_Year'));
+
+
 
 
 //Display the result
@@ -139,12 +150,12 @@ OUTPUT(coldplay_filter, NAMED('Coldplay_Tracks_Count'));
 //Hint: (SongDuration BETWEEN 200 AND 250)
 
 //Filter for required conditions
-
+duration_filter := MSDMusic(duration >= 200 AND duration <= 250 AND song_hotness <> 0 AND familiarity > .9);
 //Count result
-                            
+duration_count := COUNT(duration_filter);                
 
 //Display result
-
+OUTPUT(duration_count, NAMED('Duration_Count'));
 
 //*********************************************************************************
 //*********************************************************************************

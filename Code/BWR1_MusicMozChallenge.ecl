@@ -90,10 +90,11 @@ OUTPUT(count_myway, NAMED('MyWay_Count'));
 filter_cd := MozMusic(formats='CD');
 OUTPUT(filter_cd, NAMED('CD_Tracks'));
 //Filter dataset for tracktitle with the longest value
-longest_desc_length := MAX(filter_cd, LENGTH(tracktitle));
-OUTPUT(longest_desc_length, NAMED('Longest_Track_Title_Length'));
-longest_desc_tracks := filter_cd(LENGTH(tracktitle) = longest_desc_length);
-OUTPUT(longest_desc_tracks, NAMED('Longest_Track_Title')); 
+max_desc_length := MAX(filter_cd, LENGTH(tracktitle));
+longest_tracktitle := filter_cd(LENGTH(tracktitle) = max_desc_length);  
+OUTPUT(max_desc_length, NAMED('Max_Track_Title_Length')); 
+OUTPUT(longest_tracktitle, NAMED('Longest_Track_Title')); 
+
 //Display the result
 
 //Longest track title is by the "The Brand New Heavies"               
@@ -152,14 +153,26 @@ OUTPUT(guest_musicians_count, NAMED('Guest_Musicians_Count'));
 //Result should only have 4 fields. 
 
 //Hint: First create your new RECORD layout  
-
+/*NewRecordLayout := RECORD 
+ STRING track := '';
+    STRING release := '';
+    STRING artist := '';
+    STRING year := '';
+END;
 
 //Next: Standalone Transform - use TRANSFORM for new fields.
-
+transform_data := TRANSFORM
+  SELF.track := LEFT.tracktitle,
+  SELF.release := LEFT.title,
+    SELF.artist := LEFT.name,
+  SELF.year := LEFT.releasedate,
+  SELF := []
+END;
 
 
 //Use PROJECT, to loop through your music dataset
-
+loop_data := PROJECT(MozMusic, transform(LEFT));
+*/
 
 // Display result  
 
