@@ -167,14 +167,26 @@ OUTPUT(duration_count, NAMED('Duration_Count'));
 
 //Hint: Create your new RECORD layout and use TRANSFORM for new fields. 
 //Use PROJECT, to loop through your music dataset
-
+First50Layout := RECORD
+    STRING title;
+    STRING artist_name;
+    STRING release_name;
+    UNSIGNED4 year;
+END;
 
 //Standalone Transform 
+first50_dataset := PROJECT(MSDMusic, 
+TRANSFORM(First50Layout, 
+    SELF.title := LEFT.title,
+    SELF.artist_name := LEFT.artist_name,
+    SELF.release_name := LEFT.release_name,
+    SELF.year := LEFT.year
+));
 
 //PROJECT
 
 // Display result  
-
+OUTPUT(CHOOSEN(first50_dataset, 50), NAMED('Title_Artist_Release_Year'));
 //*********************************************************************************
 //*********************************************************************************
 
@@ -214,15 +226,27 @@ OUTPUT(correlation_beat, NAMED('Correlation_Beat'));
 //      Use PROJECT, to loop through your music dataset
 
 //Create the RECORD layout
-
+NewLayout := RECORD
+    STRING song;
+    STRING artist;
+    BOOLEAN isPopular;
+    BOOLEAN isTooLoud;
+END;
 
 //Build your TRANSFORM
+new_dataset := PROJECT(MSDMusic,
+TRANSFORM(NewLayout,
+    SELF.song := LEFT.title,
+    SELF.artist := LEFT.artist_name,
+    SELF.isPopular := LEFT.song_hotness > .80,
+    SELF.isTooLoud := LEFT.loudness > 0
+));
 
 //Creating the PROJECT
 
 
 //Display the result
-
+OUTPUT(new_dataset, NAMED('Song_Artist_Popular_Loud'));
                        
                                               
 //*********************************************************************************
