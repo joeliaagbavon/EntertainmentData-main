@@ -15,5 +15,5 @@ Setting up the HPCC enviroment and learning the syntac of ECL were some difficul
 
 
 ## Tools Utilized
-    - GitHub Copilot: 
-        * Used to help me fix syntax errors, and help me understand how use the functions in ECL.
+GitHub Copilot: 
+    <p>Used to help me fix syntax errors, and help me understand how use the functions in ECL.</p>
