@@ -1,4 +1,4 @@
-﻿#OPTION('obfuscateOutput', TRUE);
+﻿//#OPTION('obfuscateOutput', TRUE);
 IMPORT $;
 IMPORT std;
 SpotMusic := $.File_Music.SpotDS;

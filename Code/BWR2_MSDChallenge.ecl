@@ -1,4 +1,4 @@
-﻿#OPTION('obfuscateOutput', TRUE);
+﻿//#OPTION('obfuscateOutput', TRUE);
 IMPORT $;
 IMPORT std;
 MSDMusic := $.File_Music.MSDDS;
@@ -109,24 +109,6 @@ OUTPUT(hotness_year_table_sorted, NAMED('MaxHot_Year'));
 OUTPUT(hottest_song, NAMED('Hottest_Song_Year'));
 
 
-/*valid_year_songs := MSDMusic(year > 0);
-
-HotnessLayout := RECORD
-    valid_year_songs.year;
-    MaxHotness := MAX(GROUP, valid_year_songs.song_hotness);
-END;
-
-
-year_hotness := TABLE(valid_year_songs, HotnessLayout, year);
-
-
-hottest_songs := JOIN(valid_year_songs, year_hotness, LEFT.year = RIGHT.year AND LEFT.song_hotness = RIGHT.MaxHotness);
-
-
-sorted_hottest_songs := SORT(hottest_songs, year);
-hottest_song := CHOOSEN(sorted_hottest_songs, 1);
-OUTPUT(hottest_song, NAMED('Hottest_Song_Year'));
-*/
 //*********************************************************************************
 //*********************************************************************************
 
